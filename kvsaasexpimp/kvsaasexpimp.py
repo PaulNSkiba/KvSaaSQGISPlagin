@@ -22,16 +22,20 @@
  ***************************************************************************/
 """
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
-from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction
+from qgis.PyQt.QtGui import QIcon, QColor
+from qgis.PyQt.QtWidgets import QAction, QMessageBox, QTableWidgetItem, QComboBox, QCheckBox
+from qgis.core import QgsProject, QgsMapLayer
 
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
 from .kvsaasexpimp_dialog import KvSaasExpImpDialog
 import os.path
+import requests
+import json
 
-
+ROOT_SFKINDS = "http://127.0.0.1:5000/dicts"
+ROOT_SFFIELDS = "http://127.0.0.1:5000/dicts?kind=1&list=all"
 class KvSaasExpImp:
     """QGIS Plugin Implementation."""
 
@@ -182,12 +186,23 @@ class KvSaasExpImp:
 
     def run(self):
         """Run method that performs all the real work"""
-
+        layerNames = []
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
         if self.first_start == True:
             self.first_start = False
             self.dlg = KvSaasExpImpDialog()
+            #QMessageBox.information(self.dlg, "Message", "Check running")
+            # init layer names
+            #layerNames = [layer.name() for layer in QgsProject.instance().mapLayers().values()]
+            # Connect signal to slot which will update comboBox_2 whenever selection in comboBox changes
+            self.dlg.mMapLayerComboBox.layerChanged.connect(self.fill_AttrGridRows)
+            self.dlg.twAttrGrid.setColumnWidth(0, 200);
+            self.dlg.twAttrGrid.setColumnWidth(1, 200);
+            self.dlg.twAttrGrid.setColumnWidth(2, 50);
+
+        #self.dlg.comboBox.setFilters(QgsMapLayerProxyModel.PolygonLayer)
+        self.fill_AttrGridRows()
 
         # show the dialog
         self.dlg.show()
@@ -198,3 +213,68 @@ class KvSaasExpImp:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
             pass
+
+    def fill_AttrGridRows(self):
+        self.dlg.twAttrGrid.clear()
+        selectedLayer = self.dlg.mMapLayerComboBox.currentLayer()
+        # for feature in layer.getFeatures()
+        # selectedLayer.getFeatures()
+        if selectedLayer.type() != QgsMapLayer.VectorLayer:
+            self.dlg.twAttrGrid.setRowCount(0)
+            return
+        # Fill combo of kind types
+        self.dlg.twAttrGrid.setRowCount(len(selectedLayer.fields()))
+        response = requests.get(ROOT_SFKINDS)
+        combo_box_options = []  # response.json() #json.loads(response.json())
+        # data_json = response.json() #json.loads(response.text["data"])
+        combo_box_options = response.json()
+
+        for t in combo_box_options:
+            #combo.addItem(t['name'])
+            self.dlg.cbSFKinds.addItem(t['name'])
+
+        response = requests.get(ROOT_SFFIELDS)
+        combo_box_options = response.json()
+
+        #self.dlg.cbSFKinds.addItem(t['name'])
+
+        for i, field in enumerate(selectedLayer.fields()):
+            #self.dlg.twAttrGrid.setItem(i, 0, field.name())
+            #self.dlg.twAttrGrid.item(i + 1, 1).setText(field.name())
+            item = QTableWidgetItem(field.name())  # create a new Item
+            self.dlg.twAttrGrid.setItem(i, 0, item)
+            combo = QComboBox()
+            # Fill combo of fields
+            for t in combo_box_options:
+                combo.addItem(t['name'])
+
+            #combo_box_options = ['', 'Дерево','Контейнер', 'Скамейки','Мобильный']
+            self.dlg.twAttrGrid.setCellWidget(i, 1, combo)
+
+            check = QCheckBox()
+            check.setStyleSheet("margin-left:20px;");
+            self.dlg.twAttrGrid.setCellWidget(i, 2, check)
+
+            if (i % 2) == 0:
+                #item.setBackground(i, QColor(244,244,244))
+                self.dlg.twAttrGrid.item(i, 0).setBackground(QColor(244,244,244))
+                #self.dlg.twAttrGrid.item(i, 1).setBackground(QColor(244, 244, 244))
+                #self.dlg.twAttrGrid.item(i, 2).setBackground(QColor(244, 244, 244))
+
+            self.dlg.twAttrGrid.setRowHeight(i, 20)
+
+        headers = ["QGIS field", "KvSaaS Field", "ID->ID"]
+        self.dlg.twAttrGrid.setHorizontalHeaderLabels(headers)
+
+        if selectedLayer.featureCount() > 0:
+            feature = 0
+            #feature = selectedLayer.getFeatures()[0]
+
+            #self.dlg.twAttrGrid.setRowCount(selectedLayer.featureCount())
+        #QMessageBox.information(self.dlg, "Message", selectedLayer.featureCount())
+
+    def fill_cbLayerList(self):
+        pass
+        #if selectedLayer:
+        #    self.dlg.comboBox_2.addItems(
+        #        sorted([i for i in selectedLayer.uniqueValues(selectedLayer.fields().lookupField('names'))]))

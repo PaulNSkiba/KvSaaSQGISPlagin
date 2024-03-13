@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>436</width>
-    <height>254</height>
+    <width>608</width>
+    <height>383</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="button_box">
    <property name="geometry">
     <rect>
-     <x>80</x>
-     <y>220</y>
+     <x>260</x>
+     <y>350</y>
      <width>341</width>
      <height>32</height>
     </rect>
@@ -29,162 +29,358 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
+  <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>10</y>
-     <width>411</width>
-     <height>151</height>
+     <width>591</width>
+     <height>341</height>
     </rect>
    </property>
-   <property name="title">
-    <string>Підключення до KvSaaS REST API</string>
+   <property name="currentIndex">
+    <number>1</number>
    </property>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>91</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>DNS / IP-адреса</string>
-    </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Підключення</string>
+    </attribute>
+    <widget class="QPushButton" name="pushButton_2">
+     <property name="geometry">
+      <rect>
+       <x>380</x>
+       <y>260</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(212, 245, 255)</string>
+     </property>
+     <property name="text">
+      <string>Імпорт</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>260</y>
+       <width>191</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(210, 236, 207)</string>
+     </property>
+     <property name="text">
+      <string>Експорт</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>561</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Підключення до KvSaaS REST API</string>
+     </property>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>30</y>
+        <width>91</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>DNS / IP-адреса</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>30</y>
+        <width>191</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>kvsaas.de:9000/api</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>81</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Користувач</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_2">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>60</y>
+        <width>113</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Alex.K@kvsaas.de</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>90</y>
+        <width>47</width>
+        <height>13</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Пароль</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_3">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>90</y>
+        <width>113</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>***************</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>47</width>
+        <height>13</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Токен</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit_4">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>120</y>
+        <width>291</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>sk-WROu182rMdUQvTYm000000000000000000000RM</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>30</y>
-      <width>191</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>kvsaas.de:9000/api</string>
-    </property>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Синхронизація полів</string>
+    </attribute>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>47</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Слої:</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>290</y>
+       <width>241</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Створювати поле у QGIS, якщо не існує</string>
+     </property>
+    </widget>
+    <widget class="QTableWidget" name="twAttrGrid">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>551</width>
+       <height>241</height>
+      </rect>
+     </property>
+     <column>
+      <property name="text">
+       <string>QGIS поле</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>KVSaaS поле</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Поле ID</string>
+      </property>
+     </column>
+    </widget>
+    <widget class="QComboBox" name="cbSFKinds">
+     <property name="geometry">
+      <rect>
+       <x>410</x>
+       <y>10</y>
+       <width>161</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>296</x>
+       <y>10</y>
+       <width>111</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Тип об'єкту KVSaaS:</string>
+     </property>
+    </widget>
+    <widget class="QgsMapLayerComboBox" name="mMapLayerComboBox">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>10</y>
+       <width>181</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>60</y>
-      <width>81</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Користувач</string>
-    </property>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>Планувальник синхронизації</string>
+    </attribute>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>151</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Оновлювати кожні (хвилин):</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="spScheduleMinutes">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>10</y>
+       <width>41</width>
+       <height>22</height>
+      </rect>
+     </property>
+     <property name="value">
+      <number>5</number>
+     </property>
+    </widget>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>60</y>
-      <width>113</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Alex.K@kvsaas.de</string>
-    </property>
+   <widget class="QWidget" name="tab_4">
+    <attribute name="title">
+     <string>Взаємодія з KVSaaS</string>
+    </attribute>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Рут для замовлень:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>40</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Рут для звітів:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="edRootForOrders">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>10</y>
+       <width>221</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="edRootForReports">
+     <property name="geometry">
+      <rect>
+       <x>140</x>
+       <y>40</y>
+       <width>221</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>90</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Пароль</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_3">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>90</y>
-      <width>113</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>***************</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>120</y>
-      <width>47</width>
-      <height>13</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Токен</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_4">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>120</y>
-      <width>291</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>sk-WROu182rMdUQvTYm000000000000000000000RM</string>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QPushButton" name="pushButton">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>170</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color:rgb(210, 236, 207)</string>
-   </property>
-   <property name="text">
-    <string>Експорт</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="pushButton_2">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>170</y>
-     <width>191</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true">background-color:rgb(212, 245, 255)</string>
-   </property>
-   <property name="text">
-    <string>Імпорт</string>
-   </property>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QgsMapLayerComboBox</class>
+   <extends>QComboBox</extends>
+   <header>qgsmaplayercombobox.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
