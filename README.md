@@ -1,2 +1,2 @@
 # KvSaaSQGISPlagin
-Exchange of information with KvSaaS and QGIS
+Exchange of information between KvSaaS and QGIS
