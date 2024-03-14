@@ -39,50 +39,12 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>3</number>
    </property>
    <widget class="QWidget" name="tab">
     <attribute name="title">
      <string>Підключення</string>
     </attribute>
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="geometry">
-      <rect>
-       <x>380</x>
-       <y>260</y>
-       <width>191</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color:rgb(212, 245, 255)</string>
-     </property>
-     <property name="text">
-      <string>Імпорт</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton">
-     <property name="geometry">
-      <rect>
-       <x>180</x>
-       <y>260</y>
-       <width>191</width>
-       <height>31</height>
-      </rect>
-     </property>
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color:rgb(210, 236, 207)</string>
-     </property>
-     <property name="text">
-      <string>Експорт</string>
-     </property>
-    </widget>
     <widget class="QGroupBox" name="groupBox">
      <property name="geometry">
       <rect>
@@ -289,6 +251,25 @@
       </rect>
      </property>
     </widget>
+    <widget class="QPushButton" name="btnUpdateFromKvSaaS">
+     <property name="geometry">
+      <rect>
+       <x>450</x>
+       <y>282</y>
+       <width>125</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color:rgb(212, 245, 255)</string>
+     </property>
+     <property name="text">
+      <string>Оновити з KvSaaS</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="tab_3">
     <attribute name="title">
@@ -369,6 +350,38 @@
        <width>221</width>
        <height>20</height>
       </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnCreateOrder">
+     <property name="geometry">
+      <rect>
+       <x>380</x>
+       <y>10</y>
+       <width>131</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(222, 255, 217);</string>
+     </property>
+     <property name="text">
+      <string>Створити замовлення</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btnOpenReport">
+     <property name="geometry">
+      <rect>
+       <x>380</x>
+       <y>40</y>
+       <width>131</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(222, 255, 217);</string>
+     </property>
+     <property name="text">
+      <string>Відкрити звіт</string>
      </property>
     </widget>
    </widget>

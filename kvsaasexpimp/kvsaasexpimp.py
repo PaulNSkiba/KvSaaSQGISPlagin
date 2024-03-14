@@ -25,6 +25,7 @@ from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon, QColor
 from qgis.PyQt.QtWidgets import QAction, QMessageBox, QTableWidgetItem, QComboBox, QCheckBox
 from qgis.core import QgsProject, QgsMapLayer
+from qgis.utils import iface
 
 # Initialize Qt resources from file resources.py
 from .resources import *
@@ -32,10 +33,14 @@ from .resources import *
 from .kvsaasexpimp_dialog import KvSaasExpImpDialog
 import os.path
 import requests
+import webbrowser
 import json
 
-ROOT_SFKINDS = "http://127.0.0.1:5000/dicts"
-ROOT_SFFIELDS = "http://127.0.0.1:5000/dicts?kind=1&list=all"
+ROUTE_SFKINDS = "http://127.0.0.1:5000/dicts"
+ROUTE_SFFIELDS = "http://127.0.0.1:5000/dicts?kind=1&list=all"
+ROUTE_UPDATE = "http://127.0.0.1:5000/dicts/update"
+ROUTE_REPORT = "http://127.0.0.1:5000/dicts/report"
+ROUTE_ORDER = "http://127.0.0.1:5000/dicts/order"
 class KvSaasExpImp:
     """QGIS Plugin Implementation."""
 
@@ -200,6 +205,9 @@ class KvSaasExpImp:
             self.dlg.twAttrGrid.setColumnWidth(0, 200);
             self.dlg.twAttrGrid.setColumnWidth(1, 200);
             self.dlg.twAttrGrid.setColumnWidth(2, 50);
+            self.dlg.btnUpdateFromKvSaaS.clicked.connect(self.onBtnUpdateFromKvSaaSClicked)
+            self.dlg.btnCreateOrder.clicked.connect(self.onBtnOrderFromKvSaaSClicked)
+            self.dlg.btnOpenReport.clicked.connect(self.onBtnReportFromKvSaaSClicked)
 
         #self.dlg.comboBox.setFilters(QgsMapLayerProxyModel.PolygonLayer)
         self.fill_AttrGridRows()
@@ -214,6 +222,50 @@ class KvSaasExpImp:
             # substitute with your code.
             pass
 
+    def onBtnOrderFromKvSaaSClicked(self):
+        data = ''
+        selectedLayer = iface.activeLayer()
+        features = selectedLayer.selectedFeatures()
+        print(len(features), selectedLayer.selectedFeatureCount())
+        for f in features:
+            print(str(f['OBJECTID']))
+            data+=str(f['OBJECTID'])+'&'
+
+        print(data)
+        webbrowser.open(ROUTE_ORDER + '?' + data)
+
+    def onBtnReportFromKvSaaSClicked(self):
+        data = ''
+        #selectedLayer = self.dlg.mMapLayerComboBox.currentLayer()
+        selectedLayer = iface.activeLayer()
+        features = selectedLayer.selectedFeatures()
+        print(len(features), selectedLayer.selectedFeatureCount())
+        for f in features:
+            print(str(f['OBJECTID']))
+            data+=str(f['OBJECTID'])+'&'
+
+        print(data)
+        webbrowser.open(ROUTE_REPORT + '?' + data)
+        #response = requests.post(ROUTE_REPORT, data = data) #.json()
+
+
+    def onBtnUpdateFromKvSaaSClicked(self):
+        response = requests.get(ROUTE_UPDATE).json()
+        selectedLayer = self.dlg.mMapLayerComboBox.currentLayer()
+        field_idx = selectedLayer.fields().indexOf('Zusatz_1')
+        if selectedLayer.featureCount() > 0:
+            selectedLayer.startEditing()
+            for i, feature in enumerate(selectedLayer.getFeatures()):
+                if feature['OBJECTID'] == 27171:
+                    selectedLayer.changeAttributeValue(feature.id(), field_idx, 'TEST_VALUE') # 'TEST_VALUE'
+                    selectedLayer.reload()
+                    print('update', str(feature.id() ) + ' ' + str(field_idx))
+                    #feature['Zusatz_1'] = 'TEST_VALUE'
+                    #QMessageBox.information(self.dlg, "Message", str(feature.id() )+ ' ' + str(field_idx))
+                #feature = selectedLayer.getFeatures()[0]
+            selectedLayer.commitChanges()
+        QMessageBox.information(self.dlg, "Message", "Update")
+
     def fill_AttrGridRows(self):
         self.dlg.twAttrGrid.clear()
         selectedLayer = self.dlg.mMapLayerComboBox.currentLayer()
@@ -224,7 +276,7 @@ class KvSaasExpImp:
             return
         # Fill combo of kind types
         self.dlg.twAttrGrid.setRowCount(len(selectedLayer.fields()))
-        response = requests.get(ROOT_SFKINDS)
+        response = requests.get(ROUTE_SFKINDS)
         combo_box_options = []  # response.json() #json.loads(response.json())
         # data_json = response.json() #json.loads(response.text["data"])
         combo_box_options = response.json()
@@ -233,7 +285,7 @@ class KvSaasExpImp:
             #combo.addItem(t['name'])
             self.dlg.cbSFKinds.addItem(t['name'])
 
-        response = requests.get(ROOT_SFFIELDS)
+        response = requests.get(ROUTE_SFFIELDS)
         combo_box_options = response.json()
 
         #self.dlg.cbSFKinds.addItem(t['name'])
@@ -263,7 +315,7 @@ class KvSaasExpImp:
 
             self.dlg.twAttrGrid.setRowHeight(i, 20)
 
-        headers = ["QGIS field", "KvSaaS Field", "ID->ID"]
+        headers = ["QGIS field", "KvSaaS field", "ID->ID"]
         self.dlg.twAttrGrid.setHorizontalHeaderLabels(headers)
 
         if selectedLayer.featureCount() > 0:
