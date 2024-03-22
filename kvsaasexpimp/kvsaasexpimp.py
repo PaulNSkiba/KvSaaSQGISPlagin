@@ -35,12 +35,14 @@ import os.path
 import requests
 import webbrowser
 import json
+import sys, os
 
-ROUTE_SFKINDS = "http://127.0.0.1:5000/dicts"
+ROUTE_SFKINDS = "https://dev.kvsaas.de/api/v2/sfkinds/index" #"http://127.0.0.1:5000/dicts"
 ROUTE_SFFIELDS = "http://127.0.0.1:5000/dicts?kind=1&list=all"
 ROUTE_UPDATE = "http://127.0.0.1:5000/dicts/update"
 ROUTE_REPORT = "http://127.0.0.1:5000/dicts/report"
 ROUTE_ORDER = "http://127.0.0.1:5000/dicts/order"
+api_key = ""
 class KvSaasExpImp:
     """QGIS Plugin Implementation."""
 
@@ -75,7 +77,7 @@ class KvSaasExpImp:
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
-
+        self.api_key = ''
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
         """Get the translation for a string using Qt translation API.
@@ -195,16 +197,30 @@ class KvSaasExpImp:
         # Create the dialog with elements (after translation) and keep reference
         # Only create GUI ONCE in callback, so that it will only load when the plugin is started
         if self.first_start == True:
+            #print(os.path.dirname(os.path.abspath(sys.argv[0])))
+            #print('getcwd:      ', os.getcwd())
+            #print('__file__:    ', __file__)
+            f_cfg = open(__file__.replace("kvsaasexpimp.py",".cfg"))
+            #cfg = ""
+            #with open(__file__.replace("kvsaasexpimp.py",".cfg"), 'r') as j:
+            #    cfg = json.loads(j.read())
+
+            cfg = json.load(f_cfg) # json.loads(f_cfg.read())#
+            self.api_key = cfg["api_key"]
+
+            #print(api_key)
+
             self.first_start = False
             self.dlg = KvSaasExpImpDialog()
             #QMessageBox.information(self.dlg, "Message", "Check running")
             # init layer names
             #layerNames = [layer.name() for layer in QgsProject.instance().mapLayers().values()]
             # Connect signal to slot which will update comboBox_2 whenever selection in comboBox changes
-            self.dlg.mMapLayerComboBox.layerChanged.connect(self.fill_AttrGridRows)
-            self.dlg.twAttrGrid.setColumnWidth(0, 200);
-            self.dlg.twAttrGrid.setColumnWidth(1, 200);
-            self.dlg.twAttrGrid.setColumnWidth(2, 50);
+            self.dlg.mMapLayerComboBox.layerChanged.connect(self.onLayerChanged)
+            self.dlg.cbSFKinds.currentIndexChanged.connect(self.onSFKindChanged)
+            self.dlg.twAttrGrid.setColumnWidth(0, 200)
+            self.dlg.twAttrGrid.setColumnWidth(1, 200)
+            self.dlg.twAttrGrid.setColumnWidth(2, 50)
             self.dlg.btnUpdateFromKvSaaS.clicked.connect(self.onBtnUpdateFromKvSaaSClicked)
             self.dlg.btnCreateOrder.clicked.connect(self.onBtnOrderFromKvSaaSClicked)
             self.dlg.btnOpenReport.clicked.connect(self.onBtnReportFromKvSaaSClicked)
@@ -222,6 +238,12 @@ class KvSaasExpImp:
             # substitute with your code.
             pass
 
+    def onLayerChanged(self):
+        pass
+
+    def onSFKindChanged(self):
+        print(self.dlg.cbSFKinds.currentIndex())
+        pass
     def onBtnOrderFromKvSaaSClicked(self):
         data = ''
         selectedLayer = iface.activeLayer()
@@ -276,14 +298,28 @@ class KvSaasExpImp:
             return
         # Fill combo of kind types
         self.dlg.twAttrGrid.setRowCount(len(selectedLayer.fields()))
-        response = requests.get(ROUTE_SFKINDS)
+        head = {
+            'Content-Length': '0',
+            'User-Agent': 'Chrome v22.2 Linux Ubuntu',
+            'Accept': '*/*',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Authorization': 'ApiKey {}'.format(self.api_key)
+        }
+        #print(head)
+        #head = {'Authorization': 'ApiKey {}'.format(api_key)}
+        response = requests.post(ROUTE_SFKINDS, headers=head)
+        #response = requests.post(ROUTE_SFKINDS,  headers={'Authorization': f'ApiKey {api_key}'})
         combo_box_options = []  # response.json() #json.loads(response.json())
         # data_json = response.json() #json.loads(response.text["data"])
-        combo_box_options = response.json()
-
-        for t in combo_box_options:
-            #combo.addItem(t['name'])
-            self.dlg.cbSFKinds.addItem(t['name'])
+        #print(response.status_code)
+        if response.status_code == 200:
+            #print(response.json()['data'])
+            combo_box_options = response.json()['data']
+            #print(combo_box_options)
+            for t in combo_box_options:
+                #combo.addItem(t['name'])
+                self.dlg.cbSFKinds.addItem(t["Name"])
 
         response = requests.get(ROUTE_SFFIELDS)
         combo_box_options = response.json()
